@@ -29,6 +29,8 @@
 
 #include <iostream>	//use std::cerr
 #include <sstream>
+#include <locale>
+#include <codecvt>
 
 #ifndef WM_MOUSEWHEEL
 #define WM_MOUSEWHEEL	0x020A

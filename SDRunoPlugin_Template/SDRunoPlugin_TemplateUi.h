@@ -5,6 +5,7 @@
 #include <nana/gui/widgets/label.hpp>
 #include <nana/gui/timer.hpp>
 #include <iunoplugin.h>
+#include <fstream>
 #include <iostream>
 #include <iomanip>
 #include <sstream>
@@ -15,7 +16,8 @@
 // Forward reference
 class SDRunoPlugin_Template;
 
-class SDRunoPlugin_TemplateUi
+
+class SDRunoPlugin_TemplateUi : public IUnoStreamProcessor, IUnoAnnotator, IUnoAudioObserver
 {
 public:
 
@@ -29,9 +31,12 @@ public:
 
 	int LoadX();
 	int LoadY();
+	
+	void Toggle(void);
 
 private:
-	
+	std::ofstream m_logfile;
+	std::ofstream m_iqfile;
 	SDRunoPlugin_Template & m_parent;
 	std::thread m_thread;
 	std::shared_ptr<SDRunoPlugin_TemplateForm> m_form;
@@ -41,4 +46,9 @@ private:
 	std::mutex m_lock;
 
 	IUnoPluginController & m_controller;
+
+
+	void StreamProcessorProcess(channel_t channel, Complex* buffer, int length, bool& modified) override;
+	void AnnotatorProcess(std::vector<IUnoAnnotatorItem>& items) override;
+	void AudioObserverProcess(channel_t channel, const float* buffer, int length) override;
 };

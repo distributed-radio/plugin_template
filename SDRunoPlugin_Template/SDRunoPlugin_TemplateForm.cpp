@@ -115,5 +115,9 @@ void SDRunoPlugin_TemplateForm::Setup()
 	events().destroy([&] { m_parent.FormClosed(); });
 
 	// TODO: Extra Form code goes here
+	static nana::button btn(bg_inner, nana::rectangle(20, 20, 150, 30));
+	btn.caption("Toggle");
+	btn.events().click([&] {m_parent.Toggle(); });
 
+	//static nana::label lb(*m_form, nana::rectangle{ 10, 10, 100, 100 });
 }
