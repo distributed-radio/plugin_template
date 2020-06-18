@@ -17,7 +17,7 @@
 class SDRunoPlugin_Template;
 
 
-class SDRunoPlugin_TemplateUi : public IUnoStreamProcessor, IUnoAnnotator, IUnoAudioObserver
+class SDRunoPlugin_TemplateUi 
 {
 public:
 
@@ -34,6 +34,10 @@ public:
 	
 	void Toggle(void);
 
+	void StreamProcessorProcess(channel_t channel, Complex* buffer, int length, bool& modified);
+	void AnnotatorProcess(std::vector<IUnoAnnotatorItem>& items);
+	void AudioObserverProcess(channel_t channel, const float* buffer, int length);
+
 private:
 	std::ofstream m_logfile;
 	std::ofstream m_iqfile;
@@ -48,7 +52,5 @@ private:
 	IUnoPluginController & m_controller;
 
 
-	void StreamProcessorProcess(channel_t channel, Complex* buffer, int length, bool& modified) override;
-	void AnnotatorProcess(std::vector<IUnoAnnotatorItem>& items) override;
-	void AudioObserverProcess(channel_t channel, const float* buffer, int length) override;
+
 };

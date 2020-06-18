@@ -13,7 +13,7 @@
 
 #include "SDRunoPlugin_TemplateUi.h"
 
-class SDRunoPlugin_Template : public IUnoPlugin
+class SDRunoPlugin_Template : public IUnoPlugin, IUnoStreamProcessor, IUnoAnnotator, IUnoAudioObserver
 {
 
 public:
@@ -26,6 +26,25 @@ public:
 
 	// IUnoPlugin
 	virtual void HandleEvent(const UnoEvent& ev) override;
+	virtual void StreamProcessorProcess(channel_t channel, Complex* buffer, int length, bool& modified) override;
+	virtual void AnnotatorProcess(std::vector<IUnoAnnotatorItem>& items) override;
+	virtual void AudioObserverProcess(channel_t channel, const float* buffer, int length) override;
+
+	void Register(channel_t ch, bool state)
+	{
+		if (state)
+		{
+			m_controller.RegisterAudioObserver(ch, this);
+			m_controller.RegisterStreamProcessor(ch, this);
+			m_controller.RegisterAnnotator(this);
+		}
+		else
+		{
+			m_controller.UnregisterStreamProcessor(ch, this);
+			m_controller.UnregisterAnnotator(this);
+			m_controller.UnregisterAudioObserver(ch, this);
+		}
+	}
 
 private:
 	

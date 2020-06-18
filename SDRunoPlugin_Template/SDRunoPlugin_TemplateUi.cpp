@@ -198,6 +198,7 @@ void SDRunoPlugin_TemplateUi::Toggle(void)
 
 	if (m_started == false)
 	{
+		m_parent.Register(ch, true);
 		m_logfile << "Toggle -> ON: " << std::endl;
 		
 		m_logfile << "VF : " << m_controller.SetVfoFrequency(ch, 70000) << " (" << m_controller.GetVfoFrequency(ch) << ")" << std::endl;
@@ -211,16 +212,11 @@ void SDRunoPlugin_TemplateUi::Toggle(void)
 		m_logfile << "SR :" << m_controller.SetSampleRate(ch, 1000000.0) << " (" << m_controller.GetSampleRate(ch) << ")" << std::endl;
 		m_logfile << "SQ :" << m_controller.SetSquelchEnable(ch, false) << " (" << m_controller.GetSquelchEnable(ch) << ")" << std::endl;
 	
-		m_controller.RegisterAudioObserver(ch, this);
-		m_controller.RegisterStreamProcessor(ch, this);
-		m_controller.RegisterAnnotator(this);
 	}
 	else
 	{
+		m_parent.Register(ch, false);
 		m_logfile << "Toggle -> OFF: " << std::endl;
-		m_controller.UnregisterStreamProcessor(ch, this);
-		m_controller.UnregisterAnnotator(this);
-		m_controller.UnregisterAudioObserver(ch, this);
 	}
 
 	m_started = !m_started;
